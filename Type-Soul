@@ -83,15 +83,6 @@ local AutofarmToggle = RaidBossTab:CreateToggle({
     	end
 }, "Toggle") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 
-RaidTeleportToggle = RaidBossTab:CreateToggle({
-	Name = "Auto Raid Teleport",
-	Description = nil,
-	CurrentValue = false,
-    	Callback = function(Value)
-       	RaidTeleportToggle = Value
-    	end
-}, "Toggle") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-
 spawn(function()
     while wait(0.5) do
         if RaidTeleportToggle then
@@ -104,6 +95,17 @@ spawn(function()
         end
     end
 end)
+
+RaidTeleportToggle = RaidBossTab:CreateToggle({
+	Name = "Auto Raid Teleport",
+	Description = nil,
+	CurrentValue = false,
+    	Callback = function(Value)
+       	RaidTeleportToggle = Value
+    	end
+}, "Toggle") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+
+
 
 local Button = RaidBossTab:CreateButton({
 	Name = "Button Example!",
