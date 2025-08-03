@@ -88,6 +88,7 @@ spawn(function()
         if RaidTeleportToggle then
             print(RaidTeleportToggle)
             if game.PlaceId == "14069678431" then
+                print(game.PlaceId)
                 fireclickdetector(workspace.NPCs:WaitForChild("RaidBoss").Kisuke.ClickDetector)
                 if LocalPlayer.PlayerGui:FindFirstChild("Dialogue",true) then
                     firesignal(game:GetService("Players").LocalPlayer.PlayerGui.Dialogue.Main.Container.Choices.Yes.MouseButton1Click)
