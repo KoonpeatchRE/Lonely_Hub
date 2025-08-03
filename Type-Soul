@@ -1,4 +1,4 @@
-local Luna = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nebula-Softworks/Luna-Interface-Suite/refs/heads/master/source.lua", true))()
+local Luna = loadstring(game:HttpGet("https://raw.githubusercontent.com/KoonpeatchRE/Lonely_Lib/refs/heads/main/GuiLib", true))()
 
 local Window = Luna:CreateWindow({
 	Name = "Luna Example Window", -- This Is Title Of Your Window
