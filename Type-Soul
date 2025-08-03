@@ -160,5 +160,3 @@ local ConfigTab = Window:CreateTab({
 ConfigTab:CreateDivider()
 
 ConfigTab:BuildConfigSection()
-
-RaidBossTab:LoadAutoloadConfig()
