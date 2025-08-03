@@ -86,6 +86,7 @@ local AutofarmToggle = RaidBossTab:CreateToggle({
 spawn(function()
     while wait(0.5) do
         if RaidTeleportToggle then
+            print(RaidTeleportToggle)
             if game.PlaceId == "14069678431" then
                 fireclickdetector(workspace.NPCs:WaitForChild("RaidBoss").Kisuke.ClickDetector)
                 if LocalPlayer.PlayerGui:FindFirstChild("Dialogue",true) then
