@@ -85,18 +85,12 @@ local function TpToNearestMob()
         if closestMob then
             print("Tweening to closest mob:", closestMob.Name, "Distance:", math.floor(shortestDistance))
             
-            -- Position above the mob (10 studs above)
-            local mobPosition = closestMob.HumanoidRootPart.Position
-            local targetPosition = Vector3.new(mobPosition.X, mobPosition.Y + 10, mobPosition.Z)
+            local targetCFrame = closestMob.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
             
             -- Calculate duration based on distance and speed
             local speed = 50 -- Speed in studs per second
-            local distance = (targetPosition - playerPosition).Magnitude
+            local distance = (targetCFrame.Position - playerPosition).Magnitude
             local duration = distance / speed
-            
-            -- Calculate look direction towards the mob (looking down)
-            local lookDirection = (mobPosition - targetPosition).Unit
-            local targetCFrame = CFrame.lookAt(targetPosition, targetPosition + lookDirection)
             
             local tweenInfo = TweenInfo.new(
                 duration, -- Duration based on speed
@@ -111,7 +105,6 @@ local function TpToNearestMob()
             )
             
             tween:Play()
-            
         else
             print("No valid mobs found!")
         end
@@ -119,7 +112,6 @@ local function TpToNearestMob()
         print("Player character not found in Entities - cannot search for mobs")
     end
 end
-
 RunService.Stepped:Connect(function()
    if not RaidTeleportToggle1 and not StartSelectBossToggle1 then return end
    for i, v in pairs(LocalPlayer.Character:GetChildren()) do
