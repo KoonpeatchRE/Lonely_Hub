@@ -1,13 +1,134 @@
-game:WaitForChild(workspace)
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
+local TweenService = game:GetService("TweenService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local GuiService = game:GetService("GuiService")
+local RunService = game:GetService('RunService')
+RaidTeleportToggle1 = false
+AutofarmToggle1 = false
+StartSelectBossToggle1 = false
+local BossesSelection 
+local camera = workspace.CurrentCamera
+local BossesList = {"The Cero King","Unohana","The Fear","Captain of the 6th Division","Captain of the 2nd Division","The Almighty","Captain of the 12th Division","Kenpachi","The Tiger King","Captain of the 9th Division","The Bone King","The Head Captain","Captain of the 8th Division","Captain of the 3rd Division","Captain of the 7th Division"}
 
-
+local function TweenToPosition(x, y, z, speed)
+   speed = speed or 50 -- Default speed if not specified
+   
+   local character = game.Players.LocalPlayer.Character
+   if not character or not character:FindFirstChild("HumanoidRootPart") then
+       print("Character not found!")
+       return
+   end
+   
+   local currentPosition = character.HumanoidRootPart.Position
+   local targetPosition = Vector3.new(x, y, z)
+   local distance = (targetPosition - currentPosition).Magnitude
+   local duration = distance / speed -- Calculate duration based on speed
+   
+   local targetCFrame = CFrame.new(x, y, z)
+   
+   local tweenInfo = TweenInfo.new(
+       duration,
+       Enum.EasingStyle.Quad,
+       Enum.EasingDirection.Out
+   )
+   
+   local tween = TweenService:Create(
+       character.HumanoidRootPart,
+       tweenInfo,
+       {CFrame = targetCFrame}
+   )
+   
+   tween:Play()
+end
 
 local function TpToNearestMob()
+    local character = LocalPlayer.Character
+    if not character or not character:FindFirstChild("HumanoidRootPart") then
+        print("Character not found!")
+        return
+    end
     
+    -- Check if Entities folder exists
+    if not workspace:FindFirstChild("Entities") then
+        print("Entities folder not found!")
+        return
+    end
+    
+    local playerPosition = character.HumanoidRootPart.Position
+    local closestMob = nil
+    local shortestDistance = math.huge
+    
+    -- Check if we can search for mobs (player should exist in Entities for this game)
+    if workspace.Entities:FindFirstChild(LocalPlayer.Name) then
+        -- Loop through entities to find closest mob
+        for i, v in ipairs(workspace.Entities:GetChildren()) do
+            -- Skip if it's the local player or doesn't have required components
+            if v.Name ~= LocalPlayer.Name and v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") then
+                -- Check if it's NOT a player (only NPCs/mobs)
+                local isPlayer = Players:GetPlayerFromCharacter(v)
+                if not isPlayer and v.Humanoid.Health > 0 then
+                    local distance = (v.HumanoidRootPart.Position - playerPosition).Magnitude
+                    
+                    if distance < shortestDistance then
+                        shortestDistance = distance
+                        closestMob = v
+                    end
+                    
+                    print(i, v.Name, "Distance:", math.floor(distance))
+                end
+            end
+        end
+        
+        -- Tween to the closest mob (smooth movement)
+        if closestMob then
+            print("Tweening to closest mob:", closestMob.Name, "Distance:", math.floor(shortestDistance))
+            
+            -- Position above the mob (10 studs above)
+            local mobPosition = closestMob.HumanoidRootPart.Position
+            local targetPosition = Vector3.new(mobPosition.X, mobPosition.Y + 10, mobPosition.Z)
+            
+            -- Calculate look direction towards the mob (looking down)
+            local lookDirection = (mobPosition - targetPosition).Unit
+            local targetCFrame = CFrame.lookAt(targetPosition, targetPosition + lookDirection)
+            
+            -- Calculate duration based on distance and speed
+            local speed = 50 -- Speed in studs per second
+            local distance = (targetPosition - playerPosition).Magnitude
+            local duration = distance / speed
+            
+            local tweenInfo = TweenInfo.new(
+                duration, -- Duration based on speed
+                Enum.EasingStyle.Quad,
+                Enum.EasingDirection.Out
+            )
+            
+            local tween = TweenService:Create(
+                character.HumanoidRootPart,
+                tweenInfo,
+                {CFrame = targetCFrame}
+            )
+            
+            tween:Play()
+            
+        else
+            print("No valid mobs found!")
+        end
+    else
+        print("Player character not found in Entities - cannot search for mobs")
+    end
 end
+
+RunService.Stepped:Connect(function()
+   if not RaidTeleportToggle1 and not StartSelectBossToggle1 then return end
+   for i, v in pairs(LocalPlayer.Character:GetChildren()) do
+       if v:IsA("BasePart") then
+           v.CanCollide = false
+       end
+   end
+end)
+
 
 ----icon https://github.com/latte-soft/lucide-roblox/blob/master/md/icon-index.md
 
@@ -60,33 +181,71 @@ LonelyHub:Notification({
 	Content = "This Is A Preview Of Luna's Dynamic Notification System Entailing Estimated/Calculated Wait Times, A Sleek Design, Icons, And A Glassmorphic Look"
 })
 
-local Dropdown = RaidBossTab:CreateDropdown({
+spawn(function()
+    while wait(0.1) do
+        if StartSelectBossToggle1 then
+            print(BossesSelection)
+            local playButton = game:GetService("Players").LocalPlayer.PlayerGui.BossChooser.BossList.Content:FindFirstChild(BossesSelection)
+            local voteButton = game:GetService("Players").LocalPlayer.PlayerGui.BossChooser.Vote
+            local voteButtontext = game:GetService("Players").LocalPlayer.PlayerGui.BossChooser.Vote.Boss.Text
+            -- Select the Play button
+            GuiService.SelectedObject = playButton
+
+            -- Press Enter once
+            VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+            VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+
+            if voteButtontext == BossesSelection then
+            GuiService.SelectedObject = voteButton
+            VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+            VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+            end
+
+        end
+    end
+end)
+
+BossDropdown = RaidBossTab:CreateDropdown({
 	Name = "Select Boss",
     	Description = nil,
-	Options = {"Option 1","Option 2"},
-    	CurrentOption = {"Option 1"},
+	    Options = BossesList,
+    	CurrentOption = {"The Fear"},
     	MultipleOptions = false,
     	SpecialType = nil,
     	Callback = function(Options)
-     	 -- The function that takes place when the selected option is changed
-    	 -- If MultipleOptions is true then The variable (Options) is a table of strings for the current selected options. Else, it is a string of the currentoption
+     	 BossesSelection = Options
 	end
 }, "Dropdown") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 
-local AutofarmToggle = RaidBossTab:CreateToggle({
-	Name = "Autofarm",
+StartSelectBossToggle = RaidBossTab:CreateToggle({
+	Name = "Auto Select Boss in Raid",
 	Description = "Select Boss First",
 	CurrentValue = false,
     	Callback = function(Value)
-       	 -- The function that takes place when the toggle is switched
-       	 -- The variable (Value) is a boolean on whether the toggle is true or false
+       	StartSelectBossToggle1 = Value
+    	end
+}, "Toggle") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+
+spawn(function()
+    while wait(0.05) do
+        if AutofarmToggle1 then
+           TpToNearestMob()
+        end
+    end
+end)
+
+AutofarmToggle = RaidBossTab:CreateToggle({
+	Name = "Autofarm Nearest Mob",
+	Description = "Select Boss First",
+	CurrentValue = false,
+    	Callback = function(Value)
+       	AutofarmToggle1 = Value
     	end
 }, "Toggle") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 
 spawn(function()
     while wait(0.5) do
-        if RaidTeleportToggle then
-            print(RaidTeleportToggle)
+        if RaidTeleportToggle1 then
             if workspace.NPCs:WaitForChild("RaidBoss").Kisuke then
                 fireclickdetector(workspace.NPCs:WaitForChild("RaidBoss").Kisuke.ClickDetector)
                 if LocalPlayer.PlayerGui:FindFirstChild("Dialogue",true) then
@@ -102,7 +261,7 @@ RaidTeleportToggle = RaidBossTab:CreateToggle({
 	Description = nil,
 	CurrentValue = false,
     	Callback = function(Value)
-       	RaidTeleportToggle = Value
+       	RaidTeleportToggle1 = Value
     	end
 }, "Toggle") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 
