@@ -44,6 +44,17 @@ local function TweenToPosition(x, y, z, speed)
    tween:Play()
 end
 
+    if not game.Workspace:FindFirstChild("TeleportPart") then
+        local part = Instance.new("Part")
+        part.Parent = game.Workspace
+        part.Name = 'TeleportPart'
+        part.Transparency = 0
+        part.Size = Vector3.new(6, 0.1, 6)
+        part.Position = Vector3.new(1, 1, 1)
+        part.Anchored = true
+        part.CanCollide = true
+    end
+
 local function TpToNearestMob()
     local character = LocalPlayer.Character
     if not character or not character:FindFirstChild("HumanoidRootPart") then
@@ -87,6 +98,7 @@ local function TpToNearestMob()
             print("Tweening to closest mob:", closestMob.Name, "Distance:", math.floor(shortestDistance))
             
             local targetCFrame = closestMob.HumanoidRootPart.CFrame * CFrame.new(0, dintanceuppervaule, 0)
+
             
             -- Calculate duration based on distance and speed
             local speed = 50 -- Speed in studs per second
@@ -104,8 +116,8 @@ local function TpToNearestMob()
                 tweenInfo,
                 {CFrame = targetCFrame}
             )
-            
             tween:Play()
+            game.Workspace:FindFirstChild("TeleportPart").CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, -3, 0)                
         else
             print("No valid mobs found!")
         end
