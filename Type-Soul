@@ -212,7 +212,7 @@ BossDropdown = RaidBossTab:CreateDropdown({
 
 StartSelectBossToggle = RaidBossTab:CreateToggle({
 	Name = "Auto Select Boss in Raid",
-	Description = "Select Boss First",
+	Description = "",
 	CurrentValue = false,
     	Callback = function(Value)
        	StartSelectBossToggle1 = Value
@@ -227,7 +227,7 @@ spawn(function()
     end
 end)
 
-local Slider = RaidBossTab:CreateSlider({
+dintanceuppervauleslider = RaidBossTab:CreateSlider({
 	Name = "Distance of Autofarm",
 	Range = {0, 15}, -- The Minimum And Maximum Values Respectively
 	Increment = 0.5, -- Basically The Changing Value/Rounding Off
