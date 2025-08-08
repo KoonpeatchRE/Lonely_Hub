@@ -89,14 +89,14 @@ local function TpToNearestMob()
             local mobPosition = closestMob.HumanoidRootPart.Position
             local targetPosition = Vector3.new(mobPosition.X, mobPosition.Y + 10, mobPosition.Z)
             
-            -- Calculate look direction towards the mob (looking down)
-            local lookDirection = (mobPosition - targetPosition).Unit
-            local targetCFrame = CFrame.lookAt(targetPosition, targetPosition + lookDirection)
-            
             -- Calculate duration based on distance and speed
             local speed = 50 -- Speed in studs per second
             local distance = (targetPosition - playerPosition).Magnitude
             local duration = distance / speed
+            
+            -- Calculate look direction towards the mob (looking down)
+            local lookDirection = (mobPosition - targetPosition).Unit
+            local targetCFrame = CFrame.lookAt(targetPosition, targetPosition + lookDirection)
             
             local tweenInfo = TweenInfo.new(
                 duration, -- Duration based on speed
