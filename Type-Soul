@@ -123,7 +123,7 @@ RunService.Stepped:Connect(function()
        if v:IsA("BasePart") then
            v.CanCollide = false
        end
-   end
+    end
 end)
 
 
