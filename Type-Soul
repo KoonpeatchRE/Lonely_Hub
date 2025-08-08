@@ -87,10 +87,10 @@ local function TpToNearestMob()
                         shortestDistance = distance
                         closestMob = v
                     end
-                                    end
+                end
             end
         end
-        
+        game.Workspace:FindFirstChild("TeleportPart").CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, -3, 0)                
         -- Tween to the closest mob (smooth movement)
         if closestMob then            
             local targetCFrame = closestMob.HumanoidRootPart.CFrame * CFrame.new(0, dintanceuppervaule, 0)       
@@ -110,9 +110,7 @@ local function TpToNearestMob()
                 tweenInfo,
                 {CFrame = targetCFrame}
             )
-            tween:Play()
-            game.Workspace:FindFirstChild("TeleportPart").CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, -3, 0)                
-        else
+            tween:Play()        else
         end
     else
     end
