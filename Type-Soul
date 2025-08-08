@@ -106,9 +106,9 @@ local function TpToNearestMob()
                 Enum.EasingStyle.Quad,
                 Enum.EasingDirection.Out
             )
-            
-                               TweenService:Create(LHumannoidlp,TweenInfo.new(((LHumannoidlp.Position-closestMob.HumanoidRootPart.Position).magnitude)/50, Enum.EasingStyle.Linear),{CFrame = closestMob.HumanoidRootPart.CFrame * 5}):Play()          
-         else
+            local tween = TweenService:Create(LHumannoidlp,TweenInfo.new(((LHumannoidlp.Position-closestMob.HumanoidRootPart.Position).magnitude)/50, Enum.EasingStyle.Linear),{CFrame = closestMob.HumanoidRootPart.CFrame * 5}):Play()     
+            tween:Play()
+            else
         end
     else
     end
