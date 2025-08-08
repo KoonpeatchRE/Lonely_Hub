@@ -222,7 +222,7 @@ StartSelectBossToggle = RaidBossTab:CreateToggle({
 }, "Toggle") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 
 spawn(function()
-    while wait(0.05) do
+    while true do wait()
         if AutofarmToggle1 then
            TpToNearestMob()
         end
