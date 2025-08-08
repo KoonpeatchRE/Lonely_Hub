@@ -8,6 +8,7 @@ local RunService = game:GetService('RunService')
 RaidTeleportToggle1 = false
 AutofarmToggle1 = false
 StartSelectBossToggle1 = false
+dintanceuppervaule = 7
 local BossesSelection 
 local camera = workspace.CurrentCamera
 local BossesList = {"The Cero King","Unohana","The Fear","Captain of the 6th Division","Captain of the 2nd Division","The Almighty","Captain of the 12th Division","Kenpachi","The Tiger King","Captain of the 9th Division","The Bone King","The Head Captain","Captain of the 8th Division","Captain of the 3rd Division","Captain of the 7th Division"}
@@ -85,7 +86,7 @@ local function TpToNearestMob()
         if closestMob then
             print("Tweening to closest mob:", closestMob.Name, "Distance:", math.floor(shortestDistance))
             
-            local targetCFrame = closestMob.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
+            local targetCFrame = closestMob.HumanoidRootPart.CFrame * CFrame.new(0, dintanceuppervaule, 0)
             
             -- Calculate duration based on distance and speed
             local speed = 50 -- Speed in studs per second
@@ -225,6 +226,18 @@ spawn(function()
         end
     end
 end)
+
+local Slider = RaidBossTab:CreateSlider({
+	Name = "Distance of Autofarm",
+	Range = {0, 15}, -- The Minimum And Maximum Values Respectively
+	Increment = 0.5, -- Basically The Changing Value/Rounding Off
+	CurrentValue = 7, -- The Starting Value
+    	Callback = function(Value)
+       	 -- The function that takes place when the slider changes
+       	 -- The variable (Value) is a number which correlates to the value the slider is currently at
+         dintanceuppervaule = Value
+    	end
+}, "Slider") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 
 AutofarmToggle = RaidBossTab:CreateToggle({
 	Name = "Autofarm Nearest Mob",
